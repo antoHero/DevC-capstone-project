@@ -53,5 +53,6 @@ const Article = {
         } catch(err) {
             return res.status(400).json({err});
         }
-    }
+    },
+    
 }
