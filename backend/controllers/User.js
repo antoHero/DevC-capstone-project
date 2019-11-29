@@ -40,7 +40,34 @@ const User = {
       }
       return res.status(400).send(error);
     }
-  }
+  },
+
+  /**
+   * Login
+   */
+
+   async signin(req, res) {
+     if(!req.body.email || !req.body.password) {
+       return res.status(400).json({message: 'Email or Password field is blank'})
+     }
+     if(!Helper.emailIsValid(req.body.email)) {
+       return res.status(400).json({message: 'Invalid email. Please enter a valid one'});
+     }
+     const queryText = 'SELECT * FROM users WHERE email=$1';
+     try {
+      const { rows } = await db.query(queryText, [req.body.email]);
+      if(!rows[0]) {
+        return res.status(400).json({message: 'Invalid Email/Password Combination'});
+      }
+      if(!Helper.comparePassword(rows[0].password, req.body.password)) {
+        return res.status(400).json({message: 'Incorrect password'});
+      }
+      const token = Helper.generateToken(rows[0].id);
+      return res.status(200).json({token});
+     } catch(err) {
+        return res.status(400).json({err});
+     }
+   }
 }
 
 module.exports = {User}
