@@ -20,7 +20,9 @@
     "jasmine": "^3.5.0"
   },
   "dependencies": {
+    "bcrypt": "^3.0.7",
     "dotenv": "^8.2.0",
+    "jsonwebtoken": "^8.5.1",
     "pg": "^7.14.0"
   }
 }
