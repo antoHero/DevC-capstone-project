@@ -53,5 +53,34 @@ const Article = {
         } catch(err) {
             return res.status(400).json({err});
         }
+    },
+    async commentOnArticle(req, res) {
+        const getOne = 'SELECT * FROM article WHERE id=$1 AND user_id=$2';
+        const commentQuery = `INSERT INTO articleComments(id, comment,article_id,user_id,datePosted)
+        VALUES($1,$2,$3,$4,$5) returning *`;
+        try {
+            const { rows } = await database.query(getOne, [req.params.id, req.user.id]);
+            if(!rows[0]) {
+                return res.status(404).json({
+                    message: 'Oops Article does not exist!'
+                });
+            }
+            const values = [
+                uuidv4(),
+                req.body.comment,
+                moment(new Date()),
+                req.article.id,
+                req.user.id,
+                moment(new Date())
+            ];
+
+            const response = await database.query(commentQuery, values);
+            return res.status(201).json({
+                message: 'Successfully added comment'
+            });
+        } catch(error) {
+            return res.status(400).send(error);
+        }
+
     }
 }
