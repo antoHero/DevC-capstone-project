@@ -44,3 +44,34 @@ pool.on('connect', () => {
         }
     );
  }
+
+ /**Create article table 
+  * 
+ */
+
+ const createArticleTable = () => {
+    const queryText = 
+    `CREATE TABLE IF NOT EXISTS 
+      article (
+      ID SERIAL PRIMARY KEY,
+      title VARCHAR(255) NOT NULL,
+      article TEXT NOT NULL,
+      datePosted timestamp,
+      user_id VARCHAR(255) NOT NULL,
+      FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+  )`;
+
+  pool.query(queryText)
+  .then(
+      (res) => {
+          console.log(res);
+          pool.end();
+      }
+  )
+  .catch(
+      (err) => {
+          console.log(err);
+          pool.end();
+      }
+  );
+}
