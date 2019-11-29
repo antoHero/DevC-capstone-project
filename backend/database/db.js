@@ -57,8 +57,8 @@ pool.on('connect', () => {
       title VARCHAR(255) NOT NULL,
       article TEXT NOT NULL,
       datePosted timestamp,
-      user_id VARCHAR(255) NOT NULL,
-      FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+      user_id SERIAL,
+      FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
   )`;
 
   pool.query(queryText)
@@ -75,3 +75,34 @@ pool.on('connect', () => {
       }
   );
 }
+
+/**
+ * Create ArticleComments table
+ */
+
+ const createArticleCommentsTable = () => {
+     const queryText = 
+     `CREATE TABLE IF NOT EXISTS
+     articleComments(
+         ID SERIAL PRIMARY KEY,
+         comment VARCHAR(225) NOT NULL,
+         user_id UUID,
+         article_id UUID,
+         datePosted timestamp,
+         FOREIGN KEY (user_id, article_id) REFERENCES users(id), article(id) ON DELETE CASCADE
+     )`;
+
+     pool.query(queryText)
+     .then(
+         (res) => {
+             console.log(res);
+             pool.end();
+         }
+     )
+     .catch(
+         (err) => {
+             console.log(err);
+             pool.end();
+         }
+     )
+ }
