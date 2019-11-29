@@ -64,7 +64,20 @@ const Gif = {
             return res.status(400).send(error);
         }
 
-    }
+    },
+    //employees can view specific gif posts
+    async readOne(req, res) {
+        const readQuery = 'SELECT * FROM artgificle WHERE id=$1 AND user_id=$2';
+        try {
+            const { rows } = await db.query(readQuery, [req.params.id, req.user.id]);
+            if(!rows[0]) {
+                return res.status(404).json({message:'Oops Gif does not exist!'});
+            }
+            return res.status(200).json(rows[0]);
+        } catch(err) {
+            return res.status(400).json({err});
+        }
+    },
 }
 
 module.exports = {Gif}
