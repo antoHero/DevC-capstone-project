@@ -21,8 +21,7 @@ module.exports = {
     },
     "plugins": [
         "react",
-        "@typescript-eslint",
-        "parser:@typescript-eslint/parser"
+        "@typescript-eslint"
     ],
     "rules": {
     }
