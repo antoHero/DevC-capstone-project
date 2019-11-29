@@ -41,5 +41,17 @@ const Article = {
         } catch(err) {
             return res.status(400).json({error});
         }
+    },
+    async deleteArticle(req, res) {
+        const deleteQuery = 'DELETE * FROM article WHERE id=$1 AND user_id=$2 returning *';
+        try {
+            const { rows } = await db.query(deleteQuery, [req.params.id, req.user.id]);
+            if(!rows[0]){
+                return res.status(404).json({message: 'Oops Article does not exist!'});
+            }
+            return res.status(200).json({message: 'Article deleted successfully'});
+        } catch(err) {
+            return res.status(400).json({err});
+        }
     }
 }
