@@ -36,7 +36,35 @@ const Gif = {
             return res.status(400).json({err});
         }
     },
-    
+    //employees can comment on other employees gif images
+    async commentOnGif(req, res) {
+        const getOne = 'SELECT * FROM gif WHERE id=$1 AND user_id=$2';
+        const commentQuery = `INSERT INTO gifComments(id, comment,datePosted,gif_id,user_id)
+        VALUES($1,$2,$3,$4,$5) returning *`;
+        try {
+            const { rows } = await database.query(getOne, [req.params.id, req.user.id]);
+            if(!rows[0]) {
+                return res.status(404).json({
+                    message: 'Oops Gif Post does not exist!'
+                });
+            }
+            const values = [
+                uuidv4(),
+                req.body.comment,
+                moment(new Date()),
+                req.gif.id,
+                req.user.id
+            ];
+
+            const response = await database.query(commentQuery, values);
+            return res.status(201).json({
+                message: 'Successfully added comment'
+            });
+        } catch(error) {
+            return res.status(400).send(error);
+        }
+
+    }
 }
 
 module.exports = {Gif}
