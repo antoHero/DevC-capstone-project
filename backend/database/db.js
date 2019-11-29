@@ -19,7 +19,7 @@ pool.on('connect', () => {
      const queryText = 
      `CREATE TABLE IF NOT EXISTS 
      users (
-        ID SERIAL PRIMARY KEY,
+        id SERIAL PRIMARY KEY,
         firstname VARCHAR(255) NOT NULL,
         lastname VARCHAR(255) NOT NULL,
         email VARCHAR(255) NOT NULL,
@@ -53,11 +53,11 @@ pool.on('connect', () => {
     const queryText = 
     `CREATE TABLE IF NOT EXISTS 
       article (
-      ID SERIAL PRIMARY KEY,
+      id SERIAL PRIMARY KEY,
       title VARCHAR(255) NOT NULL,
       article TEXT NOT NULL,
       datePosted timestamp,
-      user_id SERIAL,
+      user_id UUID,
       FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
   )`;
 
@@ -84,7 +84,7 @@ pool.on('connect', () => {
      const queryText = 
      `CREATE TABLE IF NOT EXISTS
      articleComments(
-         ID SERIAL PRIMARY KEY,
+         id SERIAL PRIMARY KEY,
          comment VARCHAR(225) NOT NULL,
          user_id UUID,
          article_id UUID,
@@ -106,3 +106,94 @@ pool.on('connect', () => {
          }
      )
  }
+
+ /**
+  * Create Gif table
+  */
+
+  const createGifTable = () => {
+      const queryText = 
+      `CREATE TABLE IF NOT EXISTS
+      gif(
+          id SERIAL PRIMARY KEY,
+          title VARCHAR(225) NOT NULL,
+          imageURL VARCHAR(225) NOT NULL,
+          createdOn timestamp,
+          user_id UUID,
+          FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+      )`;
+
+      pool.query(queryText)
+      .then(
+          (res) => {
+              console.log(res);
+              pool.end();
+          }
+      )
+      .catch(
+          (err) => {
+              console.log(err);
+              pool.end();
+          }
+          
+        )
+  }
+
+  /**
+   * create gif comment table
+   */
+  const createGifCommentsTable = () => {
+    const queryText = 
+    `CREATE TABLE IF NOT EXISTS
+    gifComments(
+        id SERIAL PRIMARY KEY,
+        comment VARCHAR(225) NOT NULL,
+        user_id UUID,
+        gif_id UUID,
+        datePosted timestamp,
+        FOREIGN KEY (user_id, gif_id) REFERENCES users(id), gif(id) ON DELETE CASCADE
+    )`;
+
+    pool.query(queryText)
+    .then(
+        (res) => {
+            console.log(res);
+            pool.end();
+        }
+    )
+    .catch(
+        (err) => {
+            console.log(err);
+            pool.end();
+        }
+    )
+}
+
+/**
+ * Create all tables
+ */
+
+ const createAllTables = () => {
+     createUserTable();
+     createArticleTable();
+     createArticleCommentsTable();
+     createGifTable();
+     createGifCommentsTable();
+
+ }
+
+ pool.on('remove', () => {
+     console.log('Client removed');
+     process.exit(0);
+ });
+
+ module.exports = {
+     createUserTable,
+     createArticleTable,
+     createArticleCommentsTable,
+     createGifTable,
+     createGifCommentsTable,
+     createAllTables
+ };
+
+ require('make-runnable');
