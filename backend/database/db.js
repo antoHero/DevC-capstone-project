@@ -11,3 +11,36 @@ pool.on('connect', () => {
     console.log('Successfully connected to the database');
 });
 
+/**
+ * Create User Table
+ */
+
+ const createUserTable = () => {
+     const queryText = 
+     `CREATE TABLE IF NOT EXISTS 
+     users (
+        ID SERIAL PRIMARY KEY,
+        firstname VARCHAR(255) NOT NULL,
+        lastname VARCHAR(255) NOT NULL,
+        email VARCHAR(255) NOT NULL,
+        password VARCHAR(255) NOT NULL,
+        gender VARCHAR(100) NOT NULL,
+        jobRole VARCHAR(100) NOT NULL,
+        department VARCHAR(100) NOT NULL,
+        address VARCHAR(100) NOT NULL
+    )`;
+
+    pool.query(queryText)
+    .then(
+        (res) => {
+            console.log(res);
+            pool.end();
+        }
+    )
+    .catch(
+        (err) => {
+            console.log(err);
+            pool.end();
+        }
+    );
+ }
