@@ -29,11 +29,11 @@ const Gif = {
         try {
             const { rows } = await db.query(deleteQuery, [req.params.id, req.user.id]);
             if(!rows[0]) {
-                return res.status(404).json({message: 'Oops Gif not found!'});
+                return res.status(404).send({'message': 'Oops Gif not found!'});
             }
-            return res.status(200).json({message: 'Gif deleted successfully'});
+            return res.status(200).send({'message': 'Gif deleted successfully'});
         } catch(err) {
-            return res.status(400).json({err});
+            return res.status(400).send(err);
         }
     },
     //employees can comment on other employees gif images
@@ -44,8 +44,8 @@ const Gif = {
         try {
             const { rows } = await database.query(getOne, [req.params.id, req.user.id]);
             if(!rows[0]) {
-                return res.status(404).json({
-                    message: 'Oops Gif Post does not exist!'
+                return res.status(404).send({
+                    'message': 'Oops Gif Post does not exist!'
                 });
             }
             const values = [
@@ -57,8 +57,8 @@ const Gif = {
             ];
 
             const response = await database.query(commentQuery, values);
-            return res.status(201).json({
-                message: 'Successfully added comment'
+            return res.status(201).send({
+                'message': 'Successfully added comment'
             });
         } catch(error) {
             return res.status(400).send(error);
@@ -71,11 +71,11 @@ const Gif = {
         try {
             const { rows } = await db.query(readQuery, [req.params.id, req.user.id]);
             if(!rows[0]) {
-                return res.status(404).json({message:'Oops Gif does not exist!'});
+                return res.status(404).send({'message':'Oops Gif does not exist!'});
             }
-            return res.status(200).json(rows[0]);
+            return res.status(200).send(rows[0]);
         } catch(err) {
-            return res.status(400).json({err});
+            return res.status(400).send(err);
         }
     },
     //employees can view all gifs, showing the most recent gif first
@@ -83,9 +83,9 @@ const Gif = {
         const queryText = 'SELECT * FROM gif ORDER BY ASC';
         try{
             const { rows, rowCount } = await db.query(queryText);
-            return res.status(200).json({rows, rowCount});
+            return res.status(200).send({rows, rowCount});
         } catch(err) {
-            return res.status(400).json({err});
+            return res.status(400).send(err);
         }
     }
 }

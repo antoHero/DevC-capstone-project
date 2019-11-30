@@ -42,6 +42,17 @@ const User = {
     }
   },
 
+  //get users
+  async getUsers(req, res) {
+    const queryText = 'SELECT * FROM users ORDER BY ASC';
+    try {
+      const { rows, rowCount } = await db.query(queryText);
+      return res.status(200).json({rows, rowCount});
+    } catch(err) {
+      return res.status(400).json({err});
+    }
+  },
+
   /**
    * Login
    */
