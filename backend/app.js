@@ -6,6 +6,10 @@ const cors = require('cors');
 const dotenv = require('dotenv');
 const path = require('path');
 const app = express();
+const gifRoutes = require('./routes/gifs');
+const gifCtrl = require('./controllers/Gif');
+dotenv.config();
+
 app.use(cors());
 
 app.use((req, res, next) => {
@@ -20,5 +24,7 @@ app.get('/', (req, res) => {
         message: 'Endpoint working'
     });
 });
+
+app.use('api/v1/gifs', gifRoutes);
 
 module.exports = app;
