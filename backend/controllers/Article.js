@@ -1,4 +1,4 @@
-import db from '../database/db';
+const db = require('../database/db');
 
 const Article = {
     async addArticle(req, res) {
@@ -106,4 +106,4 @@ const Article = {
     }
 }
 
-module.exports = {Article}
+module.exports = Article;
