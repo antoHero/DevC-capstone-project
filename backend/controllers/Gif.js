@@ -78,6 +78,16 @@ const Gif = {
             return res.status(400).json({err});
         }
     },
+    //employees can view all gifs, showing the most recent gif first
+    async viewAllGifs(req, res) {
+        const queryText = 'SELECT * FROM gif ORDER BY ASC';
+        try{
+            const { rows, rowCount } = await db.query(queryText);
+            return res.status(200).json({rows, rowCount});
+        } catch(err) {
+            return res.status(400).json({err});
+        }
+    }
 }
 
 module.exports = {Gif}
