@@ -1,5 +1,5 @@
-import db from '../database/db';
-import Helper from './Helper';
+const db = require('../database/db');
+const Helper = require('./Helper');
 
 const User = {
   /**
@@ -70,4 +70,4 @@ const User = {
    }
 }
 
-module.exports = {User}
+module.exports = User;

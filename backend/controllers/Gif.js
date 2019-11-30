@@ -1,4 +1,4 @@
-import db from '../database/db';
+const db = require('../database/db');
 
 const Gif = {
 
@@ -90,4 +90,4 @@ const Gif = {
     }
 }
 
-module.exports = {Gif}
+module.exports = Gif;
